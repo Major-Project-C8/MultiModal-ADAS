@@ -1,5 +1,106 @@
 # MultiModal-ADAS
 
+## Module 2: Night-Time & Low-Light Processing
+
+### Overview
+Module 2 is responsible for detecting nighttime and low-light driving conditions in the MultiModal-ADAS system. The module uses the **BDD100K driving dataset** and analyzes driving images and video frames using the HSV (Hue, Saturation, Value) color space.
+
+The Value (V) channel is used to estimate scene brightness, and threshold-based classification is applied to identify low-light conditions. The module provides lighting-condition information for integration with the other ADAS perception modules.
+
+### Features
+- **HSV-Based Brightness Analysis:** Converts driving images and video frames from BGR to HSV and extracts the V channel.
+- **Low-Light Detection:** Uses V-channel brightness and thresholding to identify nighttime and low-light scenes.
+- **Image & Video Processing:** Supports dataset images and frame-by-frame driving video processing.
+- **Threshold Optimization:** Analyzes brightness values to determine a suitable low-light threshold.
+- **Performance Evaluation:** Uses accuracy, precision, recall, F1-score, and confusion matrix.
+- **Robustness Testing:** Evaluates performance under different nighttime and low-light conditions.
+- **Pipeline Integration Ready:** Provides lighting-condition information for integration with the complete ADAS system.
+
+### Topics Covered
+**1. HSV & V-Channel Analysis**
+
+- Converts driving images and video frames from BGR to HSV.
+- Extracts the V channel and calculates brightness statistics.
+- Uses V-channel brightness to characterize lighting conditions.
+
+**2. Low-Light Classification**
+
+- Applies a brightness threshold to classify normal-light and low-light conditions.
+- Analyzes threshold values using selected driving samples.
+
+**3. Image & Video Testing**
+
+- Uses relevant **BDD100K driving data** for lighting-condition analysis.
+- Processes video frames individually for low-light detection.
+- Uses selected images and video clips for testing and demonstration.
+
+**4. Performance Evaluation**
+
+- Evaluates detection using accuracy, precision, recall, F1-score, and confusion matrix.
+- Compares brightness values across different lighting conditions.
+
+### Data & Testing
+- **BDD100K Dataset:** Primary driving dataset used for testing and analyzing different lighting conditions.
+- Selected dataset samples are used instead of storing the complete dataset in the repository.
+- Both images and video frames are considered for evaluation.
+- Additional nighttime and low-light driving clips may be used for robustness testing.
+
+### Expected Outputs
+- Normal-light/nighttime/low-light classification.
+- Low-light alerts.
+- Processed images and videos.
+- V-channel brightness analysis.
+- Threshold evaluation results.
+- Classification metrics and confusion matrix.
+- Lighting-condition information for integration with the complete ADAS pipeline.
+
+### Repository Structure
+- `text`
+
+  - module2_night/
+
+    - datasets/
+
+      - images/
+      - videos/
+    - src/
+
+      - night_detection.py
+    - evaluation/
+
+      - metrics.py
+      - threshold_analysis.py
+    - sample_data/
+
+      - images/
+      - videos/
+      - results/
+    - notebooks/
+
+      - Module2_Night_Analysis.ipynb
+    - config/
+
+      - night_config.yaml
+    - requirements.txt
+    - README.md
+
+### Dependencies
+- OpenCV — Image/video processing and HSV conversion
+- NumPy — Numerical and image-processing operations
+- Pandas — Dataset and evaluation analysis
+- Scikit-learn — Performance metrics
+- Matplotlib — Brightness visualization
+
+### Evaluation Metrics
+- Accuracy
+- Precision
+- Recall
+- F1-Score
+- Confusion Matrix
+- Mean V-Channel Brightness
+
+---
+
 ## Module 3: Dark Channel Prior Dehazing & YOLOv8 Road Damage Detection
 
 ### Overview
