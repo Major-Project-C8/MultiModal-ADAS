@@ -1,4 +1,94 @@
 # MultiModal-ADAS
+Module 1: Lane Detection & Solid/Dotted Boundary Classification
+Overview
+
+Module 1 is responsible for solid lane-discipline detection in the MultiModal-ADAS system. The module uses the TuSimple and CULane driving datasets and applies classical computer vision techniques — Canny edge detection and the Probabilistic Hough Transform — to extract lane boundary line segments from driving frames.
+
+A geometric filtering stage classifies each detected boundary as solid or dotted based on segment length and gap continuity, then tracks this classification across frames to trigger a lane-departure alert only for solid-line crossings. The module is deliberately built on classical CV rather than a learned model, keeping it lightweight enough to run alongside the other three ADAS modules in the edge-processing pipeline.
+
+Features
+ROI-Based Preprocessing: Converts frames to grayscale, applies Gaussian blur, and restricts processing to a trapezoidal road-surface region of interest.
+Canny Edge Detection: Extracts edge maps with tunable thresholds, re-configurable for different lighting/visibility conditions.
+Probabilistic Hough Transform Line Extraction: Extracts candidate lane-boundary line segments (cv2.HoughLinesP) and filters out non-lane (near-horizontal) lines by slope.
+Solid vs. Dotted Geometric Classification: Groups collinear segments per boundary and classifies them using segment length and inter-segment gap pattern.
+Temporal Smoothing: Applies a rolling-window majority vote across frames to prevent alert flicker from single-frame misclassification.
+Lane Departure Alert Logic: Triggers an alert only when the vehicle crosses or nears a solid boundary; dotted-line crossings are ignored.
+Pipeline Integration Ready: Accepts a low-light override flag from Module 2 and can consume dehazed frames from Module 3 instead of raw RGB under fog/rain conditions.
+Topics Covered
+
+1. Preprocessing & ROI
+
+Converts driving frames to grayscale and applies Gaussian blur for noise suppression.
+Applies a trapezoidal ROI mask matching the camera perspective to isolate the road surface.
+
+2. Edge Detection & Line Extraction
+
+Applies Canny edge detection with configurable low/high thresholds.
+Extracts line segments via the Probabilistic Hough Transform and filters by slope.
+
+3. Geometric Classification (Solid vs. Dotted)
+
+Groups nearby/collinear segments per lane boundary.
+Classifies boundaries as solid or dotted using segment length and gap-distribution heuristics.
+Smooths classification over a rolling frame window for stability.
+
+4. Departure Alert Logic
+
+Estimates vehicle lateral offset relative to the nearest solid boundary.
+Triggers a departure alert on solid-line proximity/crossing only.
+
+5. Performance Evaluation
+
+Evaluates line detection and solid/dotted classification using precision, recall, F1-score, and per-condition false-positive/false-negative rates.
+Reports results broken down by condition (clear, night, rain, urban complex background, snow).
+Data & Testing
+TuSimple Dataset: Used for baseline lane-line detection validation.
+CULane Dataset: Used for multi-condition testing due to its greater weather/lighting diversity.
+Selected dataset samples are used instead of storing the complete datasets in the repository.
+Where solid/dotted ground truth isn't directly available in source annotations, a manually spot-labeled validation subset is used.
+Testing is reported across clear daylight, night, rain, urban-complex-background, and snow conditions to align with the multi-condition framing of the overall project.
+Expected Outputs
+Solid/dotted lane-boundary classification overlays.
+Lane-departure alerts (solid-line only).
+Lane boundary line coordinates for downstream/system integration.
+Threshold and per-condition tuning results.
+Classification metrics (precision, recall, F1-score) and false-positive/false-negative breakdown by condition.
+Lane-discipline information for integration with the complete ADAS pipeline.
+Repository Structure
+text
+module1_lane/
+datasets/
+tusimple/
+culane/
+src/
+lane_detection.py
+geometry_classifier.py
+alert_logic.py
+evaluation/
+metrics.py
+sample_data/
+images/
+videos/
+results/
+notebooks/
+Module1_Lane_Analysis.ipynb
+config/
+lane_config.yaml
+requirements.txt
+README.md
+Dependencies
+OpenCV — Image/video processing, Canny edge detection, and Hough Transform
+NumPy — Numerical and image-processing operations
+Pandas — Dataset and evaluation analysis
+Scikit-learn — Performance metrics
+Matplotlib — Visualization of detected boundaries and metrics
+Evaluation Metrics
+Accuracy
+Precision
+Recall
+F1-Score
+Confusion Matrix
+False Positive / False Negative Rate (per condition)
 
 ## Module 2: Night-Time & Low-Light Processing
 
