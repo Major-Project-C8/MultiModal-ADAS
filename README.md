@@ -58,7 +58,7 @@ The module is intentionally implemented using classical Computer Vision rather t
 
 ## System Pipeline
 
-```text
+
 Input Driving Frame
         |
         v
@@ -96,6 +96,7 @@ Solid-Line Departure Detection
         |
         v
 Lane Departure Alert
+
 ## Module 2: Night-Time & Low-Light Processing
 
 ### Overview
