@@ -1,6 +1,101 @@
 # MultiModal-ADAS
 
+# Module 1 — Lane Detection & Solid/Dotted Boundary Classification
 
+## Overview
+
+Module 1 is responsible for lane-discipline detection in the MultiModal-ADAS system.
+
+The module uses the TuSimple and CULane driving datasets and applies classical Computer Vision techniques, including Canny Edge Detection and the Probabilistic Hough Transform, to detect lane-boundary line segments from driving frames.
+
+A geometric filtering and classification stage determines whether detected lane boundaries are Solid or Dotted based on segment length, continuity, and gap patterns.
+
+The classification is smoothed across multiple frames to improve stability.
+
+The lane-departure alert is triggered only when the vehicle crosses or approaches a solid lane boundary. Dotted-line crossings are ignored.
+
+The module is intentionally implemented using classical Computer Vision rather than a deep-learning model, making it lightweight enough to operate alongside the other ADAS modules in an edge-processing pipeline.
+
+---
+
+## Features
+
+- ROI-Based Preprocessing
+  - Converts frames to grayscale
+  - Applies Gaussian blur for noise reduction
+  - Uses a trapezoidal Region of Interest (ROI)
+
+- Canny Edge Detection
+  - Detects lane-marking edges
+  - Supports configurable low and high thresholds
+  - Can be tuned for different lighting conditions
+
+- Probabilistic Hough Transform
+  - Uses `cv2.HoughLinesP`
+  - Extracts candidate lane-boundary line segments
+  - Filters non-lane lines using slope-based constraints
+
+- Solid vs. Dotted Classification
+  - Groups nearby and collinear segments
+  - Uses segment length and gap patterns
+  - Classifies lane boundaries as solid or dotted
+
+- Temporal Smoothing
+  - Uses a rolling-window majority vote
+  - Reduces frame-to-frame classification flickering
+
+- Lane Departure Alert
+  - Estimates vehicle lateral position
+  - Generates alerts for solid-line crossings or proximity
+  - Ignores dotted-line crossings
+
+- Pipeline Integration
+  - Supports low-light information from Module 2
+  - Can process dehazed frames from Module 3
+  - Designed for integration with the complete MultiModal-ADAS pipeline
+
+---
+
+## System Pipeline
+
+```text
+Input Driving Frame
+        |
+        v
+Grayscale Conversion
+        |
+        v
+Gaussian Blur
+        |
+        v
+ROI Masking
+        |
+        v
+Canny Edge Detection
+        |
+        v
+Probabilistic Hough Transform
+        |
+        v
+Slope & Geometric Filtering
+        |
+        v
+Lane Boundary Grouping
+        |
+        v
+Solid / Dotted Classification
+        |
+        v
+Temporal Smoothing
+        |
+        v
+Vehicle Lateral Offset Estimation
+        |
+        v
+Solid-Line Departure Detection
+        |
+        v
+Lane Departure Alert
 ## Module 2: Night-Time & Low-Light Processing
 
 ### Overview
